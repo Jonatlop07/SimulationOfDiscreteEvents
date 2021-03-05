@@ -30,7 +30,7 @@ void arrive ( void );
 void depart ( void );
 void report ( void );
 void updateTimeAvgStats ( void );
-float exponential ( float mean );
+float exponentialDistribution ( float mean );
 
 int main ( ) {
    
@@ -79,7 +79,7 @@ void initialize ( void ) {
    numInQueue      = 0.0;
    timeOfLastEvent = 0.0;
 
-   timeOfNextEvent[1] = simulationTime + exponential( meanInterarrival );
+   timeOfNextEvent[1] = simulationTime + exponentialDistribution( meanInterarrival );
    timeOfNextEvent[2] = 1.0e+30;   
 } 
 
@@ -108,7 +108,7 @@ void timing ( void ) {
 
 void arrive ( void ) {
    
-   timeOfNextEvent[ 1 ] = simulationTime + exponential( meanInterarrival );
+   timeOfNextEvent[ 1 ] = simulationTime + exponentialDistribution( meanInterarrival );
 
    if ( serverStatus == BUSY ) {
 
@@ -131,7 +131,7 @@ void arrive ( void ) {
       ++numCustsDelayed;
       serverStatus = BUSY;
 
-      timeOfNextEvent[ 2 ] = simulationTime + exponential( meanService ); 
+      timeOfNextEvent[ 2 ] = simulationTime + exponentialDistribution( meanService ); 
    }
 }
 
@@ -150,7 +150,7 @@ void depart ( void ) {
       totalOfDelays += delay;
 
       ++numCustsDelayed;
-      timeOfNextEvent[ 2 ] = simulationTime + exponential( meanService );
+      timeOfNextEvent[ 2 ] = simulationTime + exponentialDistribution( meanService );
 
       for ( int i = 1; i <= numInQueue; ++i )
          timeOfArrival[ i ] = timeOfArrival[ i + 1 ];
@@ -167,4 +167,8 @@ void report ( void ) {
             areaServerStatus / simulationTime );
    fprintf( outFile, "Time simulation ended%12.3f minutes",
             simulationTime );
+}
+
+float exponentialDistribution ( float mean ) {
+   return -mean * log( lcgrand( 1 ) );
 }
