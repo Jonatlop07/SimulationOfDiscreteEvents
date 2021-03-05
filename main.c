@@ -135,3 +135,24 @@ void arrive ( void ) {
    }
 }
 
+void depart ( void ) {
+
+   if ( numInQueue == 0 ) {
+
+      serverStatus = IDLE;
+      timeOfNextEvent[ 2 ] = 1.0e+30;
+
+   } else {
+
+      --numInQueue;
+
+      float delay    = simulationTime - timeOfArrival[ 1 ];
+      totalOfDelays += delay;
+
+      ++numCustsDelayed;
+      timeOfNextEvent[ 2 ] = simulationTime + exponential( meanService );
+
+      for ( int i = 1; i <= numInQueue; ++i )
+         timeOfArrival[ i ] = timeOfArrival[ i + 1 ];
+   }
+}
