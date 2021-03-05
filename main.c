@@ -137,7 +137,7 @@ void arrive ( void ) {
 
 void depart ( void ) {
 
-   if ( numInQueue == 0 ) {
+   if ( numInQueue <= 0 ) {
 
       serverStatus = IDLE;
       timeOfNextEvent[ 2 ] = 1.0e+30;
@@ -155,4 +155,16 @@ void depart ( void ) {
       for ( int i = 1; i <= numInQueue; ++i )
          timeOfArrival[ i ] = timeOfArrival[ i + 1 ];
    }
+}
+
+void report ( void ) {
+   
+   fprintf( outFile, "\n\nAverage delay in queue%11.3f minutes\n\n",
+            totalOfDelays / numCustsDelayed );
+   fprintf( outFile, "Average number in queue%10.3f\n\n",
+            areaNumberInQueue / simulationTime );
+   fprintf( outFile, "Server utilization%15.3f\n\n",
+            areaServerStatus / simulationTime );
+   fprintf( outFile, "Time simulation ended%12.3f minutes",
+            simulationTime );
 }
