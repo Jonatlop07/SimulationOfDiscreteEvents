@@ -14,14 +14,13 @@ float simulationTime;
 
 // State variables
 int numInQueue, serverStatus;
-float timeOfLastEvent;
+float timeOfArrival[ Q_LIMIT + 1 ], timeOfNextEvent[ 3 ], timeOfLastEvent;
 
 // Statistical counters
 int numCustsDelayed;
 float areaNumInQueue, areaServerStatus, totaOfDelays;
 
 int nextEventType, numEvents;
-float timeArrival[ Q_LIMIT + 1 ], timeOfNextEvent[ 3 ], timeOfLastEvent;
 
 FILE *inFile, *outFile;
 
@@ -72,7 +71,7 @@ int main ( ) {
    return 0;
 }
 
-void initialize () {
+void initialize ( void ) {
    
    simulationTime  = 0.0;
    
@@ -83,3 +82,25 @@ void initialize () {
    timeOfNextEvent[1] = simulationTime + exponential( meanInterarrival );
    timeOfNextEvent[2] = 1.0e+30;   
 } 
+
+void timing ( void ) {
+
+   float minTimeOfNextEvent = 1.0e+29;
+   
+   nextEventType = 0;
+
+   for ( int i = 1; i <= numEvents; ++i ) {
+      if ( timeOfNextEvent[ i ] < minTimeOfNextEvent ) {
+         minTimeOfNextEvent = timeOfNextEvent[i];
+         nextEventType = i;
+      }
+   }
+
+   if ( nextEventType == 0 ) {
+      fprintf( outFile, "\nEvent list empty at time %f", simulationTime );
+      return -1;
+   }
+
+   simulationTime = minTimeOfNextEvent;
+}
+
