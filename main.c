@@ -6,12 +6,22 @@
 #define BUSY 1
 #define IDLE 0
 
-int nextEventType, numCustsDelayed, numDelaysRequired, numEvents,
-    numInQueue, serverStatus;
+// Model settings variables
+float meanInterarrival, meanService, numDelaysRequired;
 
-float areaNumInQueue, areaServerStatus, meanInterarrival, meanService,
-      simTime, timeArrival[ Q_LIMIT + 1 ], timeLastEvent, timeNextEvent[ 3 ],
-      totalOfDelays;
+// Simulation clock
+float simulationTime;
+
+// State variables
+int numInQueue, serverStatus;
+float timeOfLastEvent;
+
+// Statistical counters
+int numCustsDelayed;
+float areaNumInQueue, areaServerStatus, totaOfDelays;
+
+int nextEventType, numEvents;
+float timeArrival[ Q_LIMIT + 1 ], timeOfNextEvent[ 3 ], timeOfLastEvent;
 
 FILE *inFile, *outFile;
 
@@ -45,9 +55,9 @@ int main ( ) {
       updateTimeAvgStats();
 
       switch ( nextEventType ) {
-         case 1:
-            arrive();
-            break;
+         case 1: 
+            arrive(); 
+            break; 
          case 2:
             depart();
             break;
@@ -62,12 +72,14 @@ int main ( ) {
    return 0;
 }
 
+void initialize () {
+   
+   simulationTime  = 0.0;
+   
+   serverStatus    = IDLE;
+   numInQueue      = 0.0;
+   timeOfLastEvent = 0.0;
 
-
-
-
-
-
-
-
-
+   timeOfNextEvent[1] = simulationTime + exponential( meanInterarrival );
+   timeOfNextEvent[2] = 1.0e+30;   
+} 
