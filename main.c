@@ -91,12 +91,14 @@ void timing ( void ) {
 
    for ( int i = 1; i <= numEvents; ++i ) {
       if ( timeOfNextEvent[ i ] < minTimeOfNextEvent ) {
+
          minTimeOfNextEvent = timeOfNextEvent[ i ];
          nextEventType = i;
       }
    }
 
    if ( nextEventType == 0 ) {
+
       fprintf( outFile, "\nEvent list empty at time %f", simulationTime );
       return -1;
    }
@@ -106,21 +108,30 @@ void timing ( void ) {
 
 void arrive ( void ) {
    
-   float delay;
-
    timeOfNextEvent[ 1 ] = simulationTime + exponential( meanInterarrival );
 
    if ( serverStatus == BUSY ) {
+
       ++numInQueue;
 
       if ( numInQueue > Q_LIMIT )  {
+
          fprintf( outFile, "\nOverflow of the array timeOfArrival at");
          fprintf( outFile, "time %f", simulationTime );
          return -1;
       }
+
+      timeOfArrival[ numInQueue ];
+
+   } else {
+
+      float delay    = 0.0;
+      totalOfDelays += delay;
+
+      ++numCustsDelayed;
+      serverStatus = BUSY;
+
+      timeOfNextEvent[ 2 ] = simulationTime + exponential( meanService ); 
    }
-
-   timeOfArrival[ numInQueue ];
 }
-
 
