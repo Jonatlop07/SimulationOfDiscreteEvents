@@ -167,7 +167,7 @@ void report ( void ) {
             areaNumInQueue / simulationTime );
    fprintf( outFile, "Server utilization%15.3f\n\n",
             areaServerStatus / simulationTime );
-   fprintf( outFile, "Time simulation ended%12.3f minutes",
+   fprintf( outFile, "Time simulation ended%12.3f minutes\n\n",
             simulationTime );
 }
 
