@@ -7,7 +7,8 @@
 #define IDLE 0
 
 // Model settings variables
-float meanInterarrival, meanService, numDelaysRequired;
+int numDelaysRequired;
+float meanInterarrival, meanService;
 
 // Simulation clock
 float simulationTime;
@@ -18,7 +19,7 @@ float timeOfArrival[ Q_LIMIT + 1 ], timeOfNextEvent[ 3 ], timeOfLastEvent;
 
 // Statistical counters
 int numCustsDelayed;
-float areaNumInQueue, areaServerStatus, totaOfDelays;
+float areaNumInQueue, areaServerStatus, totalOfDelays;
 
 int nextEventType, numEvents;
 
@@ -32,7 +33,7 @@ void report ( void );
 void updateTimeAvgStats ( void );
 float exponentialDistribution ( float mean );
 
-int main ( ) {
+int main ( void ) {
    
    inFile  = fopen( "mm1.in",  "r" );
    outFile = fopen( "mm1.out", "w" );
@@ -100,7 +101,7 @@ void timing ( void ) {
    if ( nextEventType == 0 ) {
 
       fprintf( outFile, "\nEvent list empty at time %f", simulationTime );
-      return -1;
+      exit( 1 );
    }
 
    simulationTime = minTimeOfNextEvent;
@@ -118,7 +119,7 @@ void arrive ( void ) {
 
          fprintf( outFile, "\nOverflow of the array timeOfArrival at");
          fprintf( outFile, "time %f", simulationTime );
-         return -1;
+         exit( 2 );
       }
 
       timeOfArrival[ numInQueue ];
