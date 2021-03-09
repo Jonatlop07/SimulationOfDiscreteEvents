@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 #include "lcgrand.h"
 
 #define Q_LIMIT 100
@@ -163,11 +164,20 @@ void report ( void ) {
    fprintf( outFile, "\n\nAverage delay in queue%11.3f minutes\n\n",
             totalOfDelays / numCustsDelayed );
    fprintf( outFile, "Average number in queue%10.3f\n\n",
-            areaNumberInQueue / simulationTime );
+            areaNumInQueue / simulationTime );
    fprintf( outFile, "Server utilization%15.3f\n\n",
             areaServerStatus / simulationTime );
    fprintf( outFile, "Time simulation ended%12.3f minutes",
             simulationTime );
+}
+
+void updateTimeAvgStats ( void ) {
+   
+   float timeSinceLastEvent = simulationTime - timeOfLastEvent;
+   timeOfLastEvent = simulationTime;
+
+   areaNumInQueue += numInQueue * timeSinceLastEvent;
+   areaServerStatus += serverStatus * timeSinceLastEvent;
 }
 
 float exponentialDistribution ( float mean ) {
