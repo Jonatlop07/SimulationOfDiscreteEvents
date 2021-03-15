@@ -8,15 +8,14 @@
 #define IDLE 0
 
 // Model settings variables
-int numDelaysRequired;
-float meanInterarrival, meanService;
+float meanInterarrival, meanService, timeEnd;
 
 // Simulation clock
 float simulationTime;
 
 // State variables
 int numInQueue, serverStatus;
-float timeOfArrival[ Q_LIMIT + 1 ], timeOfNextEvent[ 3 ], timeOfLastEvent;
+float timeOfArrival[ Q_LIMIT + 1 ], timeOfNextEvent[ 4 ], timeOfLastEvent;
 
 // Statistical counters
 int numCustsDelayed;
@@ -39,19 +38,18 @@ int main ( void ) {
    inFile  = fopen( "mm1.in",  "r" );
    outFile = fopen( "mm1.out", "w" );
 
-   numEvents = 2;
+   numEvents = 3;
 
-   fscanf( inFile, "%f %f %d", &meanInterarrival, &meanService, &numDelaysRequired );
+   fscanf( inFile, "%f %f %f", &meanInterarrival, &meanService, &timeEnd );
 
    fprintf( outFile, "Single-server queueing system\n\n" );
    fprintf( outFile, "Mean interarrival time%11.3f minutes\n\n", meanInterarrival );
    fprintf( outFile, "Mean service time%16.3f minutes\n\n", meanService );
-   fprintf( outFile, "Number of customers%14d\n\n", numDelaysRequired );
+   fprintf( outFile, "Length of the simulation%9.3f minutes\n\n", timeEnd );
    
    initialize();
 
-   while ( numCustsDelayed < numDelaysRequired ) {
-
+   do {
       timing();
       updateTimeAvgStats();
 
@@ -62,10 +60,11 @@ int main ( void ) {
          case 2:
             depart();
             break;
+         case 3:
+            report();
+            break;
       }
-   }
-
-   report();
+   } while ( nextEventType != 3 );
 
    fclose( inFile );
    fclose( outFile );
@@ -81,8 +80,14 @@ void initialize ( void ) {
    numInQueue      = 0.0;
    timeOfLastEvent = 0.0;
 
+   numCustsDelayed  = 0;
+   totalOfDelays    = 0;
+   areaNumInQueue   = 0.0;
+   areaServerStatus = 0.0;
+
    timeOfNextEvent[1] = simulationTime + exponentialDistribution( meanInterarrival );
    timeOfNextEvent[2] = 1.0e+30;   
+   timeOfNextEvent[3] = timeEnd;
 } 
 
 void timing ( void ) {
@@ -167,8 +172,8 @@ void report ( void ) {
             areaNumInQueue / simulationTime );
    fprintf( outFile, "Server utilization%15.3f\n\n",
             areaServerStatus / simulationTime );
-   fprintf( outFile, "Time simulation ended%12.3f minutes",
-            simulationTime );
+   fprintf( outFile, "Number of delays completed%7d\n\n",
+            numCustsDelayed );
 }
 
 void updateTimeAvgStats ( void ) {
