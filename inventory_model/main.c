@@ -158,3 +158,18 @@ void report ( void ) {
             avgOrderingCost + avgHoldingCost + avgShortageCost,
             avgOrderingCost, avgHoldingCost, avgShortageCost );
 }
+
+
+void updateTimeAvgStats ( void ) {
+   
+   float timeSinceLastEvent;
+
+   timeSinceLastEvent = simulationTime - timeOfLastEvent;
+   timeOfLastEvent    = simulationTime;
+
+   if ( inventoryLevel < 0 ) {
+      areaShortage -= inventoryLevel * timeSinceLastEvent;
+   else {
+      areaHolding += inventoryLevel * timeSinceLastEvent;
+   }
+}
