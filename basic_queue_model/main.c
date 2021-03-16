@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include "lcgrand.h"
+#include "../rand_gen/lcgrand.h"
 
 #define Q_LIMIT 100
 #define BUSY 1
