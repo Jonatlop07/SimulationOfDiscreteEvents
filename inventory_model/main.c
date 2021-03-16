@@ -104,6 +104,7 @@ int main () {
    return 0;
 }
 
+
 void initialize ( void ) {
    
    simulationTime = 0.0;
@@ -122,3 +123,9 @@ void initialize ( void ) {
 }
 
 
+void demand ( void ) {
+   
+   inventoryLevel -= randomInteger( probDistDemand );
+   
+   timeOfNextEvent[ 2 ] = simulationTime + exponentialDistribution( meanInterdemand );
+}
