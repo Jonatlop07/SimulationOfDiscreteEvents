@@ -143,3 +143,18 @@ void evaluate ( void ) {
 
    timeOfNextEvent[ 4 ] = simulationTime + 1.0;
 }
+
+
+void report ( void ) {
+   
+   float avgHoldingCost, avgOrderingCost, avgShortageCost;
+
+   avgOrderingCost = totalOrderingCost / numberOfMonths;
+   avgHoldingCost  = holdingCost * areaHolding / numberOfMonths;
+   avgShortageCost = shortageCost * areaShortage / numberOfMonths;
+
+   fprintf( outFile, "\n\n(%3d,%3d)%15.2f%15.2f%15.2f%15.2f",
+            smalls, bigs,
+            avgOrderingCost + avgHoldingCost + avgShortageCost,
+            avgOrderingCost, avgHoldingCost, avgShortageCost );
+}
