@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 #include "../rand_gen/lcgrand.h"
 
 // Model settings variables
@@ -79,7 +80,7 @@ int main () {
 
       do {
          timing();
-         udpdateTimeAvgStats();
+         updateTimeAvgStats();
 
          switch ( nextEventType ) {
             case 1:
@@ -123,10 +124,40 @@ void initialize ( void ) {
 }
 
 
+void timing ( void ) {
+   
+   float minTimeOfNextEvent = 1.0e+30;
+
+   nextEventType = 0;
+
+   for ( int i = 1; i <= numberOfEvents; ++i ) {
+      if ( timeOfNextEvent[ i ] < minTimeOfNextEvent ) {
+         
+         minTimeOfNextEvent = timeOfNextEvent[ i ];
+         nextEventType = i;
+      }
+   }
+
+   if ( nextEventType == 0 ) {
+      
+      fprintf( outFile, "\nEvent list empty at time %f", simulationTime );
+      exit( 1 );
+   }
+
+   simulationTime = minTimeOfNextEvent;
+}
+
+
+void orderArrival ( void ) {
+   
+   inventoryLevel      += amount;
+   timeOfNextEvent[ 1 ] = 1.0e+30;
+}
+
+
 void demand ( void ) {
    
-   inventoryLevel -= randomInteger( probDistDemand );
-   
+   inventoryLevel      -= randomInteger( probDistribDemand );
    timeOfNextEvent[ 2 ] = simulationTime + exponentialDistribution( meanInterdemand );
 }
 
@@ -136,7 +167,7 @@ void evaluate ( void ) {
    if ( inventoryLevel < smalls ) {
       
       amount = bigs - inventoryLevel;
-      totalOrderingCosts += setupCost + incrementalCost * amount;
+      totalOrderingCost += setupCost + incrementalCost * amount;
 
       timeOfNextEvent[ 1 ] = simulationTime + uniformDistribution( minimumLag, maximumLag );
    }
@@ -153,7 +184,7 @@ void report ( void ) {
    avgHoldingCost  = holdingCost * areaHolding / numberOfMonths;
    avgShortageCost = shortageCost * areaShortage / numberOfMonths;
 
-   fprintf( outFile, "\n\n(%3d,%3d)%15.2f%15.2f%15.2f%15.2f",
+   fprintf( outFile, "\n\n(%3d,%3d)%15.2f%15.2f%15.2f%15.2f\n\n",
             smalls, bigs,
             avgOrderingCost + avgHoldingCost + avgShortageCost,
             avgOrderingCost, avgHoldingCost, avgShortageCost );
@@ -169,9 +200,14 @@ void updateTimeAvgStats ( void ) {
 
    if ( inventoryLevel < 0 ) {
       areaShortage -= inventoryLevel * timeSinceLastEvent;
-   else {
+   } else {
       areaHolding += inventoryLevel * timeSinceLastEvent;
    }
+}
+
+
+float exponentialDistribution ( float mean ) {
+   return -mean * log( lcgrand( 1 ) );
 }
 
 
