@@ -6,6 +6,16 @@
 int initialInventoryLevel, numberOfMonths, numberOfValuesDemand;
 float holdingCost, incrementalCost, maximumLag, meanInterdemand, minimumLag, setupCost, shortageCost;
 
+// Simulation clock
+float simulationTime;
+
+// State variables
+int inventoryLevel;
+float timeOfLastEvent, timeOfNextEvent[ 5 ];
+
+// Statistical counters
+float areaHolding, areaShortage, totalOrderingCost;
+
 int bigs, smalls;
 float probDistribDemand[ 26 ];
 
@@ -93,3 +103,22 @@ int main () {
 
    return 0;
 }
+
+void initialize ( void ) {
+   
+   simulationTime = 0.0;
+
+   inventoryLevel  = initialInventoryLevel;
+   timeOfLastEvent = 0.0;
+
+   totalOrderingCost = 0.0;
+   areaHolding       = 0.0;
+   areaShortage      = 0.0;
+
+   timeOfNextEvent[ 1 ] = 1.0e+30;
+   timeOfNextEvent[ 2 ] = simulationTime + exponentialDistribution( meanInterdemand );
+   timeOfNextEvent[ 3 ] = numberOfMonths;
+   timeOfNextEvent[ 4 ] = 0.0;
+}
+
+
