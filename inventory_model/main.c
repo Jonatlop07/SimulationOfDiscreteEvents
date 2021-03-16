@@ -129,3 +129,17 @@ void demand ( void ) {
    
    timeOfNextEvent[ 2 ] = simulationTime + exponentialDistribution( meanInterdemand );
 }
+
+
+void evaluate ( void ) {
+   
+   if ( inventoryLevel < smalls ) {
+      
+      amount = bigs - inventoryLevel;
+      totalOrderingCosts += setupCost + incrementalCost * amount;
+
+      timeOfNextEvent[ 1 ] = simulationTime + uniformDistribution( minimumLag, maximumLag );
+   }
+
+   timeOfNextEvent[ 4 ] = simulationTime + 1.0;
+}
