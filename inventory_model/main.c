@@ -16,7 +16,7 @@ float timeOfLastEvent, timeOfNextEvent[ 5 ];
 // Statistical counters
 float areaHolding, areaShortage, totalOrderingCost;
 
-int bigs, smalls;
+int amount, bigs, smalls;
 float probDistribDemand[ 26 ];
 
 int nextEventType, numberOfEvents;
@@ -186,3 +186,8 @@ int randomInteger ( float probDistrib [] ) {
 
    return i;
 } 
+
+
+float uniformDistribution ( float a, float b ) {
+   return a + lcgrand( 1 ) * ( b - a );
+}
