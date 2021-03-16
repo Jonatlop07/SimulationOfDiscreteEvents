@@ -173,3 +173,16 @@ void updateTimeAvgStats ( void ) {
       areaHolding += inventoryLevel * timeSinceLastEvent;
    }
 }
+
+
+int randomInteger ( float probDistrib [] ) {
+
+   int i;
+   float u;
+
+   u = lcgrand( 1 );
+
+   for ( i = 1; u >= probDistrib[ i ]; ++i ) ;
+
+   return i;
+} 
