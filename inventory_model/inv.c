@@ -200,7 +200,7 @@ void updateTimeAvgStats ( void ) {
 
    if ( inventoryLevel < 0 ) {
       areaShortage -= inventoryLevel * timeSinceLastEvent;
-   } else {
+   } else if ( inventoryLevel > 0) {
       areaHolding += inventoryLevel * timeSinceLastEvent;
    }
 }
