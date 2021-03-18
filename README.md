@@ -4,7 +4,7 @@ Repository for the discrete events simulation code examples given in the book 'S
 My ~/.bashrc commands to compile, execute and see the output of the models:
 
 ```
-alias comprunrandgen="cd rand_gen ; gcc -c lcgrand.o ; cd .."
-alias comprunmm1model="comprunrandgen ; cd basic_queue_model ; gcc -c mm1.c ; gcc ../rand_gen/lcgrand.o mm1.o -lm -o mm1 ; ./mm1 ; cat mm1.out ; cd .."
-alias compruninvmodel="comprunrandgen ; cd inventory_model ; gcc .c inv.c ; gcc ../rand_gen/lcgrand.o inv.o -lm -o inv ; ./inv ; cat inv.out ; cd .."
+alias randgen="cd rand_gen ; make -f lcgrand.mk ; cd .."
+alias mm1="randgen ; cd mm1 ; make -f mm1.mk ; cat mm1.out ; cd .."
+alias inv="randgen ; cd inv ; make -f inv.mk ; cat inv.out ; cd .."
 ```
