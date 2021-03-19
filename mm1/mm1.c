@@ -128,7 +128,7 @@ void arrive ( void ) {
          exit( 2 );
       }
 
-      timeOfArrival[ numInQueue ];
+      timeOfArrival[ numInQueue ] = simulationTime;
 
    } else {
 
